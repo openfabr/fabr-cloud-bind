@@ -1,0 +1,10 @@
+{
+  "database1": {
+    "value": "database1secretkey",
+    "isSecret": true
+  },
+  "api1": {
+    "value": "https://api1.fabrdemo.com",
+    "isSecret": false
+  }
+}
