@@ -1,5 +1,5 @@
 import { Command, program } from '@commander-js/extra-typings';
-import { createDecipheriv } from 'crypto';
+import { codegenHandler } from './command-handlers/codegen';
 
 program
   .version('0.0.1')
@@ -15,9 +15,7 @@ codegen
   .command("codegen")  
   .description('Generate code from a schema')
   .option("--language <string>", "Language to generate code in")
-  .action((options) => {
-    console.log(`Hello World! ${options.language}`);
-  });
+  .action(codegenHandler);
 
 codegen.parse(process.argv);
 
