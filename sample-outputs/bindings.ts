@@ -21,7 +21,18 @@ interface ISecretStore {
  */
 export abstract class Secrets {
 
-  constructor(private SecretStoreStore: ISecretStore) {
+  useEnvVars: boolean = false;
+
+  constructor(private SecretStoreService?: ISecretStore, options:any = {}) {
+    this.useEnvVars = options.useEnvVars || false;
+  }
+
+  protected getSecret(key: string): string {
+    if (this.useEnvVars) {
+      return this.getSecretEnvVar(key);
+    } else {
+      return this.getSecretDirect(key);
+    }
   }
 
   /**
@@ -29,13 +40,14 @@ export abstract class Secrets {
    * @param key 
    * @returns 
    */
-  getSecretDirect(key: string) {
+  private getSecretDirect(key: string):string {
     //NOTE: this will need an adapter interface to support different secret stores.
     const secretStoreKey = FabrOutputs[key]
 
+    if (!this.SecretStoreService) throw new Error("'SecretStoreService' argument not set");
     if (!secretStoreKey || !secretStoreKey.isSecret) throw new Error(`Secret ${key} not found in fabr.outputs.json or 'isSecret=false'`);
 
-    const secretValue = this.SecretStoreStore.getSecret(secretStoreKey.value);
+    const secretValue = this.SecretStoreService.getSecret(secretStoreKey.value);
     return secretValue;
 
   }
@@ -48,8 +60,9 @@ export abstract class Secrets {
    * @param key key name of a secret in fabr.outputs.json
    * @returns 
    */
-  static getSecretEnvVar(key: string) {
-    FabrOutputs[key]
+   private getSecretEnvVar(key: string):string {
+    //FabrOutputs[key]
+    const varName = `FI_BIND_${key.toUpperCase()}`;
     const connectionString = "postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]";
     return connectionString;
   }
@@ -59,9 +72,10 @@ export abstract class Secrets {
 // This is an example design of a class that will be generated from the fabr.outputs.json file.
 export class MySecrets extends Secrets {
   database1() {
-    return this.getSecretDirect("database1");
+    return this.getSecret("database1");
   }
 }
+
 
 
 export class FakeSecretService implements ISecretStore {
@@ -80,3 +94,4 @@ export class FakeSecretService implements ISecretStore {
 
 }
 
+new MySecrets(new FakeSecretService()).database1(); // returns the secret value from the secret store.
