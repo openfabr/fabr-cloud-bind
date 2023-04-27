@@ -94,4 +94,5 @@ export class FakeSecretService implements ISecretStore {
 
 }
 
+//example of instantiating the generated class.
 new MySecrets(new FakeSecretService()).database1(); // returns the secret value from the secret store.
