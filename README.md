@@ -14,6 +14,8 @@ The three main IfC approaches:
 - Langugage annotations like Envcore.dev, Klotho, and Shuttle
 - SDK/Library like Ampt and Nitric
 
+doppler.com - is a platform specifically around syncing secrets between systems. The secrets portion definitely overlaps but binding to a service involves more than secrets.
+
 I believe it's better and simpler to derive the bind code from infra. For one this makes backward compatibility with declerative IaC more practical. This is closer to the SDK approach. But we aren't trying create an abstraction over the cloud resources them selves which is what all the IfC products are doing. Now you are back to lockin land unless there's an escape hatch, which I'm sure many of them have.
 
 We should dig a bit more into how these frameworks work under the hood. iirc Elad @ Winglang also mention a library approach by somebody that had nuanced issues.
