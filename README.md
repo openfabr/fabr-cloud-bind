@@ -2,31 +2,21 @@
 
 ## Problem
 
-Application code needs to be bound to backend services like DBs, Cache, or other services. Unless a project is using a fullstack framework of somekind like RedwoodJS or a fullstack PaaS, binding application code to backend infra involves manual work. It's a pain at best to do it securely and daunting at worst if you aren't familiar with infra strucuture, secret stores etc. Hours and days could get burt setting up and troubleshooting. The developer experience accessing these are clunky. If a secret needs changing that involves a bunch of copypasting. Many smaller systens don't need the complexity of sophisticated service discovery and centralise authentication.
+Application code needs to be bound to backend services like DBs, Cache, or other services. Unless a project is using a fullstack framework of somekind like RedwoodJS or a fullstack PaaS, binding application code to backend infra involves manual work. It's a pain, at best, to do it securely and daunting at worst if you aren't familiar with infra strucuture, secret stores etc. Hours and days could get burt setting up and troubleshooting. The developer experience accessing these are clunky. If a secret needs changing that involves a bunch of copypasting. Many smaller systens don't need the complexity of sophisticated service discovery and centralise authentication. No one step is complicated but all of them together is time consuming. Most importantly this is undifferentiated work i.e. your customrs don't care.
 
-Projects like Winglang and Darklang strongly beleive that this problem can only be solved by developing a new application programming langugage with infra as first class constructs. Several other like Klotho and Encore.dev are using code annotations. Collectively this category is labelled Infra from Code (IfC). As I understand it, all of these tighly couple the deployment life cycle of the app code wtih infra (fact check) and is a fundamentally flawed approach. For one infra in stateful and app code shouldn't be. Also, unless this layer can completely gurantee cost and performance optimised infra customisation is required. Many organisations will continue to opt for a central infra team managing the platform. So they need to be able to define the details of the infra implementation.
-
-Yet develops should have an experience that feels like infra is first class in app code. Code annotation aren't a great experience IMO. It is better becuase it's inline with code avoiding having to context switch out into a completely differnt stack. But it's second class still interms of programming languge, IDE integration etc. Winglangs approach is interesting. But I'm not sure if it's over engineering. It's quite possible I'm not seeing it yet. Did I think the same of CDK at first? sort of.
-
-The three main IfC approaches:
-
-- new programming language like Winglang and Darklang
-- Langugage annotations like Envcore.dev, Klotho, and Shuttle
-- SDK/Library like Ampt and Nitric
-
-doppler.com - is a platform specifically around syncing secrets between systems. The secrets portion definitely overlaps but binding to a service involves more than secrets.
-
-I believe it's better and simpler to derive the bind code from infra. For one this makes backward compatibility with declerative IaC more practical. This is closer to the SDK approach. But we aren't trying create an abstraction over the cloud resources them selves which is what all the IfC products are doing. Now you are back to lockin land unless there's an escape hatch, which I'm sure many of them have.
-
-We should dig a bit more into how these frameworks work under the hood. iirc Elad @ Winglang also mention a library approach by somebody that had nuanced issues.
+Is this actually a burning problem?
+How do you currently configure your application with details about various backends?
+How time consuming and error prone is it?
 
 ## User Story
 
 App devs can very simply and intuitively write code connecting to backends like DBs, Cache, Search etc without manually searching for and hooking up endpoint addresses and secrets.
 
-- client lib are generated from a json file (meeting a spec)
-- client lib generation need to support multiple popular app langs like TypeScript, Python, Java, C#, PHP, Ruby, Rust, and Golang
-- Support incremental adoption so don't invent a new language. Users should be able to adopt this without CDF even. spec extends CDF but can be standalone. E.g. Vanilla cdk code can generate json
+## Principales
+
+- Not a third-party dependency - client lib are generated from a json file (meeting a spec)
+- Support multiple languages - client lib generation need to support multiple popular app langs like TypeScript, Python, Java, C#, PHP, Ruby, Rust, and Golang
+- Support incremental adoption - so don't invent a new language. Users should be able to adopt this without CDF even. spec extends CDF but can be standalone. E.g. Vanilla cdk code can generate json
 - Works in simple environments with static endpoint/connection string. Also with service discovery.
 
 ## Solution
@@ -67,3 +57,30 @@ interface ISecretStore {
 ```
 
 See `/sample-output/binding.ts` for the abstract class and secret service implementation prototype.
+
+Notes:
+
+- Safely pass env vars to containter - 
+>if you don't want to have the value on the command-line where it will be displayed by ps, etc., -e can pull in the value from the current environment if you just give it without the =
+
+
+## Alternative
+
+doppler.com - is a platform specifically around syncing secrets between systems. This is the closest I've come across that directly address this problem. The secrets portion definitely overlaps but this still leaves some glue to hook things up.
+
+The other approach that eleminates this class of problem is Infra from Code as below and vertically integrated fullstack frameworks RedwoodJS. However they involve you making a much larger architectural change.
+
+
+Projects like Winglang and Darklang strongly beleive that this problem can only be solved by developing a new application programming langugage with infra as first class constructs. Several other like Klotho and Encore.dev are using code annotations. Collectively this category is labelled Infra from Code (IfC). As I understand it, all of these tighly couple the deployment life cycle of the app code wtih infra (fact check) and is a fundamentally flawed approach. For one infra in stateful and app code shouldn't be. Also, unless this layer can completely gurantee cost and performance optimised infra customisation is required. Many organisations will continue to opt for a central infra team managing the platform. So they need to be able to define the details of the infra implementation.
+
+Yet develops should have an experience that feels like infra is first class in app code. Code annotation aren't a great experience IMO. It is better becuase it's inline with code avoiding having to context switch out into a completely differnt stack. But it's second class still interms of programming languge, IDE integration etc. Winglangs approach is interesting. But I'm not sure if it's over engineering. It's quite possible I'm not seeing it yet. Did I think the same of CDK at first? sort of.
+
+The three main IfC approaches:
+
+- new programming language like Winglang and Darklang
+- Langugage annotations like Envcore.dev, Klotho, and Shuttle
+- SDK/Library like Ampt and Nitric
+
+I believe it's better and simpler to derive the bind code from infra. For one this makes backward compatibility with declerative IaC more practical. This is closer to the SDK approach. But we aren't trying create an abstraction over the cloud resources them selves which is what all the IfC products are doing. Now you are back to lockin land unless there's an escape hatch, which I'm sure many of them have.
+
+We should dig a bit more into how these frameworks work under the hood. iirc Elad @ Winglang also mention a library approach by somebody that had nuanced issues.
