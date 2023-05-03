@@ -14,43 +14,71 @@ App devs can very simply and intuitively write code connecting to backends like 
 
 ## Principales
 
+- Support incremental adoption - Users should be able to adopt this without CDF even. spec extends CDF but can be standalone. E.g. Vanilla cdk code can generate json or even hand roll a json file (even though this contradicts the user story the option for incremental adoption is very important).
 - Not a third-party dependency - client lib are generated from a json file (meeting a spec)
 - Support multiple languages - client lib generation need to support multiple popular app langs like TypeScript, Python, Java, C#, PHP, Ruby, Rust, and Golang
-- Support incremental adoption - so don't invent a new language. Users should be able to adopt this without CDF even. spec extends CDF but can be standalone. E.g. Vanilla cdk code can generate json
-- Works in simple environments with static endpoint/connection string. Also with service discovery.
+- Works in simple environments with static endpoint/connection string. Also with service discovery for more complicated use cases.
 
-## Solution
+## Solution Design
 
-Parameter/secrets are input via a json file that conforms to something like the following interface. If `isSecret=true` value contains a ref to the secret store key.
+### `params.fabr.json` (name TBD)
+
+Parameter/secrets are input via a json file that conforms to something like the following interface. If `isSecret=true` value contains a ref to the secret store key. This is part of the API so user facing. On day one this interface implementation will be intented for internal use in the code gen tool and shared in user docs. In the future it might be useful to document interfaces in other languages, as a helper, for people to copy and paste so they can automate output file generation in the language of their choice.
 
 ```typescript
-export interface IFabrOutput {
-  [name: string]: {
+export interface IFabrParams {
+  [key: string]: {
     value: string,
     isSecret: boolean,
   }
 }
 ```
 
-The code genrator logic itself will be written in TypeScript. It will take `fabr.outputs.json` as input. Tempate for libraries will be developed using handlebar.js tempalating language. Then use the handlebar engine to do the heavy lifting.
+```json example params.fabr.json
+{
+  "database1": {
+    "value": "database1secretkey",
+    "isSecret": true
+  },
+  "api1": {
+    "value": "https://api1.fabrdemo.com",
+    "isSecret": false
+  }
+}
+```
+
+### Code Gen
+
+The code genrator logic itself will be written in TypeScript. It will take `params.fabr.json` as input. Templates for libraries will be developed using the handlebar.js tempalating framework. Then use the handlebar engine to do the heavy lifting.
 
 The end result is a class with an interface that looks like:
 
-```typescript
+```typescript 
 export class MySecrets extends Secrets {
-  database1() {
+  database1() { // 'key' from the params.fabr.json file 
     return this.getSecret("database1");
   }
 }
 ```
 
-```typescript
-  new MySecrets(new FakeSecretService()).database1();
+```typescript example usage in application code
+  import MySecrets from './lib/mysecrets'
+  const db1ConnectionString = new MySecrets(new FakeSecretService()).database1();
 ```
 
-Adapters for secret stores need to be implemented confirming to an interface like bellow. If we bundle some is TBD, probably makes sense to have a few popular ones. The secret store service argument is optional to allow user to choose if they want application code coupled directly to the secret store external service or not by using environment variable. In the latter case it's possible to use this library either inline in CD runs to pull the secrets or during CI/CD pipline setup IaC for example save values into GH secrets / params.
+`Secrets` abstract class - given the principle of avoiding third party deps we should try including this code in the generated client as opposed to an installed dependency. As long as we have integration tests there shouldn't be any wierd build time issues for users. This cloud be far simpler than managing package versions and upgrades. However if we need to version the abstract class and secret store adaptors things get more complicated. How do we distribute? One approah would be to peg the whole lot to the version of the generator cli.
 
-```typescript
+## Secret Store Service Adaptors
+
+Adapters for secret stores need to be implemented conforming to an interface like bellow. If we "bundle" some implementations is TBD, probably makes sense to have a few popular ones. The third-party dependency point applies and we cannot reasonably avoid cloud provider SDKs. Options: 
+
+- publish as a separate library in respective package registries
+- publish as copypaste examples in a repo.
+
+
+The secret store service argument is optional to allow user to choose if they want application code coupled directly to the secret store external service or not by using environment variable. In the latter case it's possible to use this library either inline in CD runs to pull the secrets or during CI/CD pipline setup IaC for example save values into GH secrets / params.
+
+```typescript TBD
 interface ISecretStore {
   getSecret(key: string): string;
 }
@@ -60,16 +88,19 @@ See `/sample-output/binding.ts` for the abstract class and secret service implem
 
 Notes:
 
-- Safely pass env vars to containter - 
+- Safely pass env vars to containter - this is a CD concern but and important one that is worth documenting. Maybe we can provide helper that can be used in CD.
+
 >if you don't want to have the value on the command-line where it will be displayed by ps, etc., -e can pull in the value from the current environment if you just give it without the =
 
+## Why choose TypeScript for the implementation?
+
+At this point I don't see any advantage to using another language. TypeScript seems as good as any and it's what I'm most versed in at the moment, hence can be the most productive. If you know a reason like, lang X has a much better lib or tool chain to solve this sort of problem, hit me up. NPM is easy enough cross OS distribution mechanism for the CLI. I think most people have node installed.
 
 ## Alternative
 
 doppler.com - is a platform specifically around syncing secrets between systems. This is the closest I've come across that directly address this problem. The secrets portion definitely overlaps but this still leaves some glue to hook things up.
 
 The other approach that eleminates this class of problem is Infra from Code as below and vertically integrated fullstack frameworks RedwoodJS. However they involve you making a much larger architectural change.
-
 
 Projects like Winglang and Darklang strongly beleive that this problem can only be solved by developing a new application programming langugage with infra as first class constructs. Several other like Klotho and Encore.dev are using code annotations. Collectively this category is labelled Infra from Code (IfC). As I understand it, all of these tighly couple the deployment life cycle of the app code wtih infra (fact check) and is a fundamentally flawed approach. For one infra in stateful and app code shouldn't be. Also, unless this layer can completely gurantee cost and performance optimised infra customisation is required. Many organisations will continue to opt for a central infra team managing the platform. So they need to be able to define the details of the infra implementation.
 

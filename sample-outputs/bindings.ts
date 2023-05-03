@@ -1,15 +1,15 @@
-import outputs from "./fabr.outputs.json";
+import params from "./params.fabr.json";
 
 
 
-export interface IFabrOutput {
-  [name: string]: {
+export interface IFabrParams {
+  [key: string]: {
     value: string,
     isSecret: boolean,
   }
 }
 
-const FabrOutputs = outputs as IFabrOutput;
+const FabrParams = params as IFabrParams;
 
 
 interface ISecretStore {
@@ -42,7 +42,7 @@ export abstract class Secrets {
    */
   private getSecretDirect(key: string):string {
     //NOTE: this will need an adapter interface to support different secret stores.
-    const secretStoreKey = FabrOutputs[key]
+    const secretStoreKey = FabrParams[key]
 
     if (!this.SecretStoreService) throw new Error("'SecretStoreService' argument not set");
     if (!secretStoreKey || !secretStoreKey.isSecret) throw new Error(`Secret ${key} not found in fabr.outputs.json or 'isSecret=false'`);
