@@ -1,0 +1,19 @@
+# Ignore directories and files created by Node.js and TypeScript
+node_modules/
+dist/
+*.log
+*.tsbuildinfo
+
+# Ignore environment-specific files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+*.iml
+
+# Ignore macOS-specific files
+.DS_Store

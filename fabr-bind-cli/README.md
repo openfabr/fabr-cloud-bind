@@ -51,6 +51,8 @@ export interface IFabrParams {
 
 The code genrator logic itself will be written in TypeScript. It will take `params.fabr.json` as input. Templates for libraries will be developed using the handlebar.js tempalating framework. Then use the handlebar engine to do the heavy lifting.
 
+The base lib source like for the `Secrets` class should be coped into the bundle as part of the build step.
+
 The end result is a class with an interface that looks like:
 
 ```typescript 
@@ -62,8 +64,9 @@ export class MySecrets extends Secrets {
 ```
 
 ```typescript example usage in application code
-  import MySecrets from './lib/mysecrets'
+  import {MySecrets, MyParams } from './fabr-bind';
   const db1ConnectionString = new MySecrets(new FakeSecretService()).database1();
+  const api1Endpoint = MyParams.api1;
 ```
 
 `Secrets` abstract class - given the principle of avoiding third party deps we should try including this code in the generated client as opposed to an installed dependency. As long as we have integration tests there shouldn't be any wierd build time issues for users. This cloud be far simpler than managing package versions and upgrades. However if we need to version the abstract class and secret store adaptors things get more complicated. How do we distribute? One approah would be to peg the whole lot to the version of the generator cli.
@@ -92,11 +95,26 @@ Notes:
 
 >if you don't want to have the value on the command-line where it will be displayed by ps, etc., -e can pull in the value from the current environment if you just give it without the =
 
+## CLI
+
+`fabr-bind <command> <args> <options>`
+
+- command: `client-gen <name>` generates a client library with a class that binds to the param values (both secret and none-secrets). Secrets are not embeded. Includes a copy of the params file.
+  - `--language typescript` in the future golang | python | csharp | java
+  - `--params-file` path to FABR format params file that conforms to the IFabrParams interface
+  - `--secret-service` name of one of the support secret services. TODO: in the future enable the user to specifying a custome secret store implementation through some convention. Also support 
+
+- command: `set-env` grabs the values from the secret store and sets them as environment variable. We need to know which secret store and how to auth. This typically for CI/CD pipelines, used to pass values securely env vars while decoupling the application from the secret store sevice for improved static stability.
+  - `--params-file` path to FABR format params file that conforms to the IFabrParams interface
+
+
+
+
 ## Why choose TypeScript for the implementation?
 
 At this point I don't see any advantage to using another language. TypeScript seems as good as any and it's what I'm most versed in at the moment, hence can be the most productive. If you know a reason like, lang X has a much better lib or tool chain to solve this sort of problem, hit me up. NPM is easy enough cross OS distribution mechanism for the CLI. I think most people have node installed.
 
-## Alternative
+## Alternatives
 
 doppler.com - is a platform specifically around syncing secrets between systems. This is the closest I've come across that directly address this problem. The secrets portion definitely overlaps but this still leaves some glue to hook things up.
 
@@ -115,3 +133,29 @@ The three main IfC approaches:
 I believe it's better and simpler to derive the bind code from infra. For one this makes backward compatibility with declerative IaC more practical. This is closer to the SDK approach. But we aren't trying create an abstraction over the cloud resources them selves which is what all the IfC products are doing. Now you are back to lockin land unless there's an escape hatch, which I'm sure many of them have.
 
 We should dig a bit more into how these frameworks work under the hood. iirc Elad @ Winglang also mention a library approach by somebody that had nuanced issues.
+
+## User Guide
+
+### app side
+
+- install cli `npm i fabr-bind`
+- change into the root of your app source code folder e.g. `src`
+- run `fabr-bind client-gen --language=typescript --params-file=./params.fabr.json`
+  - this will generate the fabr-bind client library source code in the a folder called `fabr-params`.
+  - import and use in your application code as follow.
+- TODO: figure out runtime authN/Z to the secret store. Maybe to start with only support secret stores in the same environment/context as the app code runtime. Look into Hashi Vault auth.
+
+```typescript example usage in application code
+  import {MySecrets, MyParams } from './fabr-bind';
+  const db1ConnectionString = new MySecrets(new FakeSecretService()).database1();
+  const api1Endpoint = MyParams.api1;
+```
+
+### IaC side
+
+- generate a `params.fabr.json` with refs to secrets and other param values.
+- in the future we will provide helpers to help with this for imperative IaC.
+
+## Development 
+
+- run locally ``

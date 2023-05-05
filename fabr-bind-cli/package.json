@@ -1,6 +1,6 @@
 {
   "name": "fabr-admin-cli",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
   "bin": {
@@ -13,7 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Janaka Abeywardhana",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^18.15.11",
