@@ -1,32 +1,30 @@
 import { Command, program } from '@commander-js/extra-typings';
-import { codegenHandler } from './command-handlers/codegen';
+import { clientgenHandler } from './command-handlers/clientgen';
 import { setenvHandler } from './command-handlers/setenv';
+//@ts-ignore
+import p from '../package.json';
+
+
 
 program
-  .version('0.0.1')
-  .description('FABR Infra Admin CLI')
-  .action(() => {
-    console.log('Hello World!');
-  });
+  .version(p.version)
+  .description('FABR Cloud Bind CLI - A CLI for generating code that binds code to infrastructure via a secret store.')
+  // .action(() => {
+  //   console.log('Hello World!');
+  // });
 
-
-const codegen = new Command('client-gen');
-
-codegen
-  .command("codegen")  
-  .description('Generate code from a schema')
+program
+  .command("client-gen")  
+  .description('Generate client code to accessing infrastrcutre secrets, from a secret store, in your app code.')
   .option("--language <string>", "Language to generate code in")
-  .option("--paras-file <string>", "relative path to a params.fabr.json file.")
-  .action(codegenHandler);
+  .option("--params-file <string>", "relative path to a params.fabr.json file.")
+  .action(clientgenHandler);
 
-codegen.parse(process.argv);
-
-const setenv = new Command('setenv');
-
-setenv
+program
   .command("set-env")
   .description("Pull values from a secret store and set as environment variables for secure access in your application code via the fabr-bind client lib")
-  .option("--param-file <string>", "relative path to a params.fabr.json file.")
+  .option("--params-file <string>", "relative path to a params.fabr.json file.")
   .action(setenvHandler)
 
-setenv.parse(process.argv);
+program.parse(process.argv);
+
