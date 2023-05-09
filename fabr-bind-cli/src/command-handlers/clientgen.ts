@@ -29,11 +29,8 @@ export const clientgenHandler = (options: any) => {
 
   loadParamsData(path.join(cwd , options.paramsFile)).then((params) => {
     console.log("params>> ", params);
-    //const a = Array.from(Object.keys(params)) //TODO: add filter for secrets
-
-    //const result = template({ secrets: ["database1", "database2"] });
-    //const result = template({ secrets: a });
-    const result = template({params: params});
+    
+    const result = template({params: params}); //TODO: move the isSecrets filter out of the template into code here.
     console.log(result);
     
     fs.writeFileSync(`${dest}/MySecrets.ts`, result, "utf8");
