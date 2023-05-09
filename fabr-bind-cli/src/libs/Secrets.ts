@@ -13,7 +13,7 @@ export abstract class Secrets {
   
   
   constructor(private SecretStoreService?: ISecretStore, options?: ISecretOptions) {
-    this.useEnvVars = options!.useEnvVars || false;
+    this.useEnvVars = options && options.useEnvVars || false;
   }
 
    protected getSecret(key: string): string | undefined {

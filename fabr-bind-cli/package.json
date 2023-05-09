@@ -7,8 +7,9 @@
     "fabr": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc && npm run copy-lib-src",
-    "copy-lib-src": "rm -rf ./dist/libs-src && cp -r ./src/libs ./dist/libs-src",
+    "build": "tsc && npm run copy-lib-src && npm run copy-templates",
+    "copy-lib-src": "rm -rf dist/libs-src && mkdir dist/libs-src && cp -Rf src/libs dist/libs-src/typescript",
+    "copy-templates": "rm -rf dist/client-templates && mkdir dist/client-templates && cp -Rf client-templates dist",
     "start": "node dist/index.js",
     "watch": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"

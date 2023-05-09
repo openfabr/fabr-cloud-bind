@@ -108,8 +108,7 @@
   },
   "include": [
     "src/**/*",
-    "src/sample-outputs/**/*"
-, "client-templates"  ],
+  ],
   "exclude": [
     "node_modules",
     "dist",

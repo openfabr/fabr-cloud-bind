@@ -156,6 +156,8 @@ We should dig a bit more into how these frameworks work under the hood. iirc Ela
 - generate a `params.fabr.json` with refs to secrets and other param values.
 - in the future we will provide helpers to help with this for imperative IaC.
 
-## Development 
+## Development
 
-- run locally ``
+- `client-templates` - language specific templates used to generate idiomatic client class that's consumes in application code.
+- `libs-src` - language specific secrets base library, types, and secrets store servie implementations.
+- `src` - CLI source code.
