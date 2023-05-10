@@ -4,7 +4,7 @@ A tool that helps easily bind applicaton code with backend infrastrcture typical
 
 You provide the CLI a simple config file with parameter key names. It generates a client library in your repo.
 
-- `fabr-cloud-bind` source code for the CLI. [[fabr-bind-cli/README]]
+- `fabr-cloud-bind` source code for the CLI. [](./fabr-bind-cli/README.md)
 - `sample-app` sample application to end2end test the genrated client lib.
 
 
@@ -16,4 +16,4 @@ This program is free software (all files in this repo): you can redistribute it 
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with this program [[LICENSE]]. If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with this program [](./LICENSE.md). If not, see <https://www.gnu.org/licenses/>.
