@@ -1,7 +1,12 @@
 # FABR Cloud Bind
 
-- `fabr-cloud-bind` source code for the CLI.
+A tool that helps easily bind applicaton code with backend infrastrcture typically via a secret store like AWS Parameter Store or Hashi Vault.
+
+You provide the CLI a simple config file with parameter key names. It generates a client library in your repo.
+
+- `fabr-cloud-bind` source code for the CLI. [[fabr-bind-cli/README]]
 - `sample-app` sample application to end2end test the genrated client lib.
+
 
 Copyright (C) 2023 Janaka Abeywardhana
 
