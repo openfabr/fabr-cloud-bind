@@ -12,7 +12,7 @@ How time consuming and error prone is it?
 
 App devs can very simply and intuitively write code connecting to backends like DBs, Cache, Search etc without manually searching for and hooking up endpoint addresses and secrets.
 
-## Principales
+## Principles
 
 - Support incremental adoption - Users should be able to adopt this without CDF even. spec extends CDF but can be standalone. E.g. Vanilla cdk code can generate json or even hand roll a json file (even though this contradicts the user story the option for incremental adoption is very important).
 - Not a third-party dependency - client lib are generated from a json file (meeting a spec)
