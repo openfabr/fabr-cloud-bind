@@ -102,10 +102,11 @@ Notes:
 - command: `client-gen <name>` generates a client library with a class that binds to the param values (both secret and none-secrets). Secrets are not embeded. Includes a copy of the params file.
   - `--language typescript` in the future golang | python | csharp | java
   - `--params-file` path to FABR format params file that conforms to the IFabrParams interface
-  - `--secret-service` name of one of the support secret services. TODO: in the future enable the user to specifying a custome secret store implementation through some convention. Also support 
+  - `--secret-service` (optional) name of one of the support secret services. If omitted no secret service adpators are included with the client. You have to provide your own.
 
 - command: `set-env` grabs the values from the secret store and sets them as environment variable. We need to know which secret store and how to auth. This typically for CI/CD pipelines, used to pass values securely env vars while decoupling the application from the secret store sevice for improved static stability.
   - `--params-file` path to FABR format params file that conforms to the IFabrParams interface
+  - `--secret-service`
 
 
 
@@ -161,3 +162,5 @@ We should dig a bit more into how these frameworks work under the hood. iirc Ela
 - `client-templates` - language specific templates used to generate idiomatic client class that's consumes in application code.
 - `libs-src` - language specific secrets base library, types, and secrets store servie implementations.
 - `src` - CLI source code.
+
+TODO: source from bucket option. 
