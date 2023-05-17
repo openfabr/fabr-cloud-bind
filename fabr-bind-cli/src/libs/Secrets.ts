@@ -1,8 +1,8 @@
 import { ISecretStore } from "./ISecretStore";
 
-export type ISecretOptions = {
-  useEnvVars?: boolean,
-}
+// export type ISecretOptions = {
+//   useEnvVars?: boolean,
+// }
 
 /**
  * Generated infra stack specific class extend this class and add the binding specific to the infra based on the fabr.outputs.json file.
@@ -12,11 +12,11 @@ export abstract class Secrets {
   useEnvVars: boolean;
   
   
-  constructor(private SecretStoreService?: ISecretStore, options?: ISecretOptions) {
-    this.useEnvVars = options && options.useEnvVars || false;
+  constructor(private SecretStoreService?: ISecretStore) {
+    this.useEnvVars = SecretStoreService ? false : true;
   }
 
-   protected getSecret(key: string): string | undefined {
+   protected getSecret(key: string) {
     if (this.useEnvVars) {
       const envName = `FI_PARAM_${key.toUpperCase()}`;
       return this.getEnvVar(envName);
@@ -30,7 +30,7 @@ export abstract class Secrets {
    * @param secretStorekey - the key for the secret in the secret store. This the 'value' when 'isSecret=true' in 'param.fabr.json'
    * @returns the secret returned from the secret store.
    */
-  private getSecretDirect(secretStorekey: string): string {
+  private getSecretDirect(secretStorekey: string) {
     
     if (!this.SecretStoreService)
       throw new Error("'SecretStoreService' argument not set");

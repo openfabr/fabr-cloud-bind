@@ -1,12 +1,28 @@
-import { FakeSecretService } from "./fabr-bind/libs/FakeSecretService";
+import { FakeSecretService } from "./fabr-bind/secret-services/FakeSecretService";
+import { AwsSecretsManagerService } from "./fabr-bind/secret-services/AwsSecretsManagerService";
 // import { IFabrParams } from "./fabr-bind/libs/IFabrParams";
 import { MySecrets } from "./fabr-bind/MySecrets";
+import {fromEnv, fromSSO } from "@aws-sdk/credential-providers"
 
-//example of instantiating the generated class.
-const mysecrets = new MySecrets(new FakeSecretService()); // returns the secret value from the secret store.
 
-console.log(`Value from 'database1': ${mysecrets.database2()}`)
+const creds = fromSSO({profile: "fabrexp"}); // For local dev, if using SSO
 
-const api1Endpoint = mysecrets.api1();
+const creds2 = fromEnv(); // In production, use env vars or roles
 
-console.log(`Value from none secret param 'api1' ${api1Endpoint}`);
+const fromSecretsManager = new MySecrets(new AwsSecretsManagerService({region: "eu-west-1", credentials: creds})); 
+
+fromSecretsManager.api1().then((value) => {
+  console.log(`call1: Value from none secret param 'api1' ${value}`);
+});
+
+setTimeout(() => {
+  fromSecretsManager.api1().then((value) => {
+    console.log(`call2: Value from none secret param 'api1' ${value}`);
+  });
+  
+
+}, 1000);
+
+
+
+

@@ -1,10 +1,6 @@
 {
-  "database2": {
-    "value": "database1secretkey",
-    "isSecret": true
-  },
   "api1": {
-    "value": "https://api1.fabrdemo.com",
-    "isSecret": false
+    "value": "fabrbind/test/myapisecret",
+    "isSecret": true
   }
 }

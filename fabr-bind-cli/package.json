@@ -7,8 +7,9 @@
     "fabr": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc && npm run copy-lib-src && npm run copy-templates",
+    "build": "tsc && npm run copy-lib-src && npm run copy-templates && npm run copy-secret-services-src",
     "copy-lib-src": "rm -rf dist/libs-src && mkdir dist/libs-src && cp -Rf src/libs dist/libs-src/typescript",
+    "copy-secret-services-src": "rm -rf dist/secret-services-src && mkdir dist/secret-services-src && cp -Rf src/secret-services dist/secret-services-src/typescript",
     "copy-templates": "rm -rf dist/client-templates && mkdir dist/client-templates && cp -Rf client-templates dist",
     "start": "node dist/index.js",
     "watch": "tsc -w",
@@ -22,6 +23,8 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.334.0",
+    "@aws-sdk/client-ssm": "^3.332.0",
     "@commander-js/extra-typings": "^10.0.3",
     "commander": "^10.0.0",
     "handlebars": "^4.7.7"

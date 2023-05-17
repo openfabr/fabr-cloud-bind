@@ -21,6 +21,7 @@ export const clientgenHandler = (options: any) => {
   console.log(`src: ${src}`)
 
   copyFolderRecursive(`${src}/libs-src/${options.language}`, `${dest}/libs`)
+  copyFolderRecursive(`${src}/secret-services-src/${options.language}`, `${dest}/secret-services`)
 
   const data = fs.readFileSync(`${src}/client-templates/${options.language}/MySecrets.tmpl`, "utf8");
   if (!data) throw new Error("Could not read template file")
