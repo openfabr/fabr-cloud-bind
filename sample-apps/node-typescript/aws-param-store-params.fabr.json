@@ -1,0 +1,6 @@
+{
+  "api1": {
+    "value": "/fabrbindcli/test/api2",
+    "isSecret": true
+  }
+}
