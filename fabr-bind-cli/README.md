@@ -73,11 +73,10 @@ export class MySecrets extends Secrets {
 
 ## Secret Store Service Adaptors
 
-Adapters for secret stores need to be implemented conforming to an interface like bellow. If we "bundle" some implementations is TBD, probably makes sense to have a few popular ones. The third-party dependency point applies and we cannot reasonably avoid cloud provider SDKs. Options: 
+Adapters for secret stores need to be implemented conforming to an interface like bellow. If we "bundle" some implementations is TBD, probably makes sense to have a few popular ones. The third-party dependency point applies and we cannot reasonably avoid cloud provider SDKs. Options:
 
 - publish as a separate library in respective package registries
 - publish as copypaste examples in a repo.
-
 
 The secret store service argument is optional to allow user to choose if they want application code coupled directly to the secret store external service or not by using environment variable. In the latter case it's possible to use this library either inline in CD runs to pull the secrets or during CI/CD pipline setup IaC for example save values into GH secrets / params.
 
@@ -99,7 +98,8 @@ Notes:
 
 `fabr-bind <command> <args> <options>`
 
-- command: `client-gen <name>` generates a client library with a class that binds to the param values (both secret and none-secrets). Secrets are not embeded. Includes a copy of the params file.
+- command: `client-gen` generates a client library with a class that binds to the param values (both secret and none-secrets). Secrets are not embeded. Includes a copy of the params file.
+  - `[name]` (optional) name used for the class generated. Defaults to 'MySecrets'
   - `--language typescript` in the future golang | python | csharp | java
   - `--params-file` path to FABR format params file that conforms to the IFabrParams interface
   - `--secret-service` (optional) name of one of the support secret services. If omitted no secret service adpators are included with the client. You have to provide your own.
@@ -107,9 +107,6 @@ Notes:
 - command: `set-env` grabs the values from the secret store and sets them as environment variable. We need to know which secret store and how to auth. This typically for CI/CD pipelines, used to pass values securely env vars while decoupling the application from the secret store sevice for improved static stability.
   - `--params-file` path to FABR format params file that conforms to the IFabrParams interface
   - `--secret-service`
-
-
-
 
 ## Why choose TypeScript for the implementation?
 

@@ -15,6 +15,7 @@ program
 
 program
   .command("client-gen")  
+  .argument("[name]", "Name of the generated client code file and class. Defaults to 'MySecrets'")
   .description('Generate client code to accessing infrastrcutre secrets, from a secret store, in your app code.')
   .option("--language <string>", "Language to generate code in")
   .option("--params-file <string>", "relative path to a params.fabr.json file.")

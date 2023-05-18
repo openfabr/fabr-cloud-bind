@@ -29,11 +29,9 @@ export class AwsSecretsManagerService implements ISecretStore {
         console.error(`key: ${key}`, err);
         reject(err);
       }
-
-      // Parameter value is returned in the 'Parameter.Value' property
+      
       paramValue = data?.SecretString;
 
-      //console.log(`AwsSecretsManagerService.getSecret():  '${key}' ${paramValue}`)
       resolve(paramValue);
     });
 

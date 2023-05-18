@@ -4,7 +4,7 @@ import path from 'path';
 //import p from './params.fabr.json'
 import { IFabrParams } from "../libs/IFabrParams";
 
-export const clientgenHandler = (options: any) => {
+export const clientgenHandler = (nameArg: string | undefined, options: any) => {
   console.log(`clientgenHandler fired --language=${options.language} --params-file=${options.paramsFile}`);
 
   // Logic for taking the fabr.outputs.json genrate code using handlebarjs
@@ -12,6 +12,7 @@ export const clientgenHandler = (options: any) => {
   // copy ./libs-src to ./libs
   // run handlebars template for the language specified
   // output to a folder in the root of the project called ./fabr-bind
+  const className = nameArg || "MySecrets";
 
   const cwd = process.cwd();
   const src = path.dirname(__dirname);
@@ -31,10 +32,10 @@ export const clientgenHandler = (options: any) => {
   loadParamsData(path.join(cwd , options.paramsFile)).then((params) => {
     console.log("params>> ", params);
     
-    const result = template({params: params}); //TODO: move the isSecrets filter out of the template into code here.
+    const result = template({params: params, className: className}); //TODO: move the isSecrets filter out of the template into code here.
     console.log(result);
     
-    fs.writeFileSync(`${dest}/MySecrets.ts`, result, "utf8");
+    fs.writeFileSync(`${dest}/${className.toLowerCase()}.ts`, result, "utf8");
   }).catch((err) => {
     console.error(err);
   });

@@ -26,7 +26,6 @@ export class AwsParameterStoreService implements ISecretStore {
         reject(err);
       }
     
-      // Parameter value is returned in the 'Parameter.Value' property
       paramValue = data?.Parameter?.Value;
       
       resolve(paramValue);
