@@ -6,6 +6,9 @@
   "bin": {
     "fabr-bind-cli": "dist/index.js"
   },
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "build": "tsc && npm run clean-libs-src && npm run copy-libs-src && npm run copy-ts-secretservices-src && npm run copy-ts-libs-src && npm run copy-templates",
     "clean-libs-src": "rm -rf dist/libs-src",
