@@ -2,8 +2,8 @@ import { FakeSecretService } from "./fabr-bind/secret-services/FakeSecretService
 import { AwsSecretsManagerService } from "./fabr-bind/secret-services/AwsSecretsManagerService";
 // import { IFabrParams } from "./fabr-bind/libs/IFabrParams";
 
-import { smSecrets } from "./fabr-bind/smsecrets";
-import { psSecrets } from "./fabr-bind/pssecrets";
+import { smSecrets } from "./fabr-bind/smSecrets";
+import { psSecrets } from "./fabr-bind/psSecrets";
 
 import {fromEnv, fromSSO } from "@aws-sdk/credential-providers"
 import { AwsParameterStoreService } from "./fabr-bind/secret-services/AwsParameterStoreService";

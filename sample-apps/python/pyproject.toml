@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "sample-app"
+version = "0.1.0"
+description = "A simple Python app to demo FABR cloud bind"
+authors = [""]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+
+[tool.poetry.dev-dependencies]
+

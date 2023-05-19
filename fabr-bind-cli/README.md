@@ -100,9 +100,10 @@ Notes:
 
 - command: `client-gen` generates a client library with a class that binds to the param values (both secret and none-secrets). Secrets are not embeded. Includes a copy of the params file.
   - `[name]` (optional) name used for the class generated. Defaults to 'MySecrets'
-  - `--language typescript` in the future golang | python | csharp | java
+  - `--language typescript | python` in the future golang | rust | ruby | php | csharp | java
   - `--params-file` path to FABR format params file that conforms to the IFabrParams interface
   - `--secret-service` (optional) name of one of the support secret services. If omitted no secret service adpators are included with the client. You have to provide your own.
+  - TODO: `--output-path` the path location to put the generated code files. Files are placed in a folder called `fabr-bind` within this folder. (default) value is `.`, the current working directory.
 
 - command: `set-env` grabs the values from the secret store and sets them as environment variable. We need to know which secret store and how to auth. This typically for CI/CD pipelines, used to pass values securely env vars while decoupling the application from the secret store sevice for improved static stability.
   - `--params-file` path to FABR format params file that conforms to the IFabrParams interface

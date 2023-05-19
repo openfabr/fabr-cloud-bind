@@ -1,23 +1,25 @@
 {
-  "name": "fabr-admin-cli",
-  "version": "0.1.0",
-  "description": "",
+  "name": "fabr-bind-cli",
+  "version": "0.4.0",
+  "description": "FABR Cloud Bind CLI - A CLI for generating code that binds code to infrastructure via a secret store. The CLI aims to be automation friendly, for example in CI/CD. The client libs aims to make access easy for app devs.",
   "main": "dist/index.js",
   "bin": {
-    "fabr": "dist/index.js"
+    "fabr-bind-cli": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc && npm run copy-lib-src && npm run copy-templates && npm run copy-secret-services-src",
-    "copy-lib-src": "rm -rf dist/libs-src && mkdir dist/libs-src && cp -Rf src/libs dist/libs-src/typescript",
-    "copy-secret-services-src": "rm -rf dist/secret-services-src && mkdir dist/secret-services-src && cp -Rf src/secret-services dist/secret-services-src/typescript",
-    "copy-templates": "rm -rf dist/client-templates && mkdir dist/client-templates && cp -Rf client-templates dist",
+    "build": "tsc && npm run clean-libs-src && npm run copy-libs-src && npm run copy-ts-secretservices-src && npm run copy-ts-libs-src && npm run copy-templates",
+    "clean-libs-src": "rm -rf dist/libs-src",
+    "copy-libs-src": "cp -Rf libs-src dist",
+    "copy-ts-secretservices-src": "cp -Rf src/secret-services dist/libs-src/typescript",
+    "copy-ts-libs-src": "cp -Rf src/libs dist/libs-src/typescript",
+    "copy-templates": "rm -rf dist/client-templates && cp -Rf client-templates dist",
     "start": "node dist/index.js",
     "watch": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["devex", "devops", "secrets", "ssm", "secretsmanager", "openfabr"],
   "author": "Janaka Abeywardhana",
-  "license": "ISC",
+  "license": "AGPL-3.0",
   "devDependencies": {
     "@types/node": "^18.15.11",
     "typescript": "^5.0.4"

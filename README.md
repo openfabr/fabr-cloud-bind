@@ -7,10 +7,9 @@ You provide the CLI a simple config file with parameter key names. It generates 
 - [/fabr-cloud-bind](./fabr-cloud-bind) source code for the CLI. [See README](./fabr-bind-cli/README.md)
 - [/sample-app](./sample-app) sample application to end2end test the genrated client lib.
 
+## License
 
 Copyright (C) 2023 Janaka Abeywardhana
-
-## License
 
 This program is free software (all files in this repo): you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 

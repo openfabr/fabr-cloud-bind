@@ -12,17 +12,26 @@ export const clientgenHandler = (nameArg: string | undefined, options: any) => {
   // copy ./libs-src to ./libs
   // run handlebars template for the language specified
   // output to a folder in the root of the project called ./fabr-bind
+
+  if (!options.paramsFile) throw new Error("'--params-file' option is required");
+  if (!options.language) throw new Error("'--language' option is required");
+
   const className = nameArg || "MySecrets";
 
   const cwd = process.cwd();
   const src = path.dirname(__dirname);
-  const dest = `${cwd}/fabr-bind`;
+  const destBase = options.outputPath ? path.join(cwd, options.outputPath) : cwd;
+
+  const fabrfoldername = options.language === "python" ? "fabr_bind" : "fabr-bind"; //TODO: hack, make fabr-bind folder part of the libs-src folder structure
+  
+  const dest = `${destBase}/${fabrfoldername}`;
 
   console.log(`cwd: ${cwd}`)
   console.log(`src: ${src}`)
+  console.log(`dest: ${dest}`)
 
-  copyFolderRecursive(`${src}/libs-src/${options.language}`, `${dest}/libs`)
-  copyFolderRecursive(`${src}/secret-services-src/${options.language}`, `${dest}/secret-services`)
+  copyFolderRecursive(`${src}/libs-src/${options.language}`, `${dest}`)
+  //copyFolderRecursive(`${src}/secret-services-src/${options.language}`, `${dest}/secret-services`)
 
   const data = fs.readFileSync(`${src}/client-templates/${options.language}/MySecrets.tmpl`, "utf8");
   if (!data) throw new Error("Could not read template file")
@@ -35,7 +44,9 @@ export const clientgenHandler = (nameArg: string | undefined, options: any) => {
     const result = template({params: params, className: className}); //TODO: move the isSecrets filter out of the template into code here.
     console.log(result);
     
-    fs.writeFileSync(`${dest}/${className.toLowerCase()}.ts`, result, "utf8");
+    const fileExt = langFileExtension(options.language);
+
+    fs.writeFileSync(`${dest}/${className}.${fileExt}`, result, "utf8");
   }).catch((err) => {
     console.error(err);
   });
@@ -75,5 +86,28 @@ function copyFolderRecursive(source: string, destination: string): void {
       // Copy files
       fs.copyFileSync(sourcePath, destinationPath);
     }
+  }
+}
+
+function langFileExtension(language: string): string {
+  switch (language) {
+    case "typescript":
+      return "ts";
+    case "python":
+      return "py";
+    case "csharp":
+      return "cs";
+    case "java":
+      return "java";
+    case "go":
+      return "go";
+    case "rust":
+      return "rs";
+    case "ruby":
+      return "rb";
+    case "php":
+      return "php";
+    default:
+      throw new Error(`Unsupported language '${language}'`);
   }
 }

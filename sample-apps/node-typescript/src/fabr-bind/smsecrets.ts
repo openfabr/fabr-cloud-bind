@@ -1,7 +1,5 @@
 import { Secrets } from "./libs/Secrets";
 
-// This is an example design of a class that will be generated from the fabr.outputs.json file.
-
 export class smSecrets extends Secrets {
       private _api1: string | undefined;
       async api1() {
